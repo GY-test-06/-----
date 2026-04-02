@@ -32,9 +32,11 @@ nav .wrap{display:flex;align-items:center;gap:12px;}
 .nav-logo{font-size:22px;}
 .nav-title{font-family:var(--font-en);font-size:15px;font-weight:800;flex:1;letter-spacing:-0.02em;color:var(--text);}
 .nav-date{font-family:var(--font-en);font-size:11px;color:var(--text-secondary);font-weight:500;letter-spacing:0.02em;}
-.nav-links{display:flex;gap:6px;}
-.nav-links a{font-size:11px;color:var(--text-secondary);padding:4px 10px;border-radius:8px;background:rgba(60,60,67,0.04);font-weight:500;transition:all .15s;}
-.nav-links a:hover{background:rgba(0,122,255,0.1);color:#007AFF;}
+.nav-links{display:flex;gap:4px;position:relative;}
+.nav-links a{font-size:11px;color:var(--text-secondary);padding:5px 12px;border-radius:8px;font-weight:500;transition:all .25s;position:relative;z-index:1;}
+.nav-links a:hover{color:#007AFF;}
+.nav-links a.active{color:#007AFF;font-weight:600;}
+.nav-indicator{position:absolute;height:100%;border-radius:8px;background:rgba(0,122,255,0.10);transition:left .3s cubic-bezier(.4,0,.2,1),width .3s cubic-bezier(.4,0,.2,1);z-index:0;top:0;}
 
 /* Cover */
 .cover{background:linear-gradient(160deg,#e8ecf3 0%,#f4f5fa 45%,#eceef5 100%);border-radius:20px;padding:32px 28px;margin:16px 0;box-shadow:var(--shadow);border:0.5px solid var(--border);}
@@ -103,36 +105,29 @@ nav .wrap{display:flex;align-items:center;gap:12px;}
 .ed-related-list li::before{content:"•";color:#007AFF;font-weight:700;margin-right:8px;}
 
 /* News List */
-.news-list{display:flex;flex-direction:column;gap:12px;}
-.news-page{display:none;flex-direction:column;gap:12px;}
-.news-page.active{display:flex;}
-.news-card{background:var(--card);backdrop-filter:var(--blur);border-radius:16px;border:0.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden;display:flex;transition:transform .15s;text-decoration:none;color:inherit;min-height:140px;}
+.news-list{display:flex;flex-direction:column;gap:10px;}
+.news-card{background:var(--card);backdrop-filter:var(--blur);border-radius:16px;border:0.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden;display:flex;height:120px;transition:transform .15s;text-decoration:none;color:inherit;}
 .news-card:hover{transform:translateY(-2px);}
-.news-bar{width:5px;flex-shrink:0;border-radius:5px 0 0 5px;}
-.news-body{padding:18px 20px;flex:1;min-width:0;display:flex;gap:14px;}
-.news-num{font-family:var(--font-en);font-size:28px;font-weight:800;flex-shrink:0;line-height:1;}
+.news-bar{width:4px;flex-shrink:0;border-radius:4px 0 0 4px;}
+.news-body{padding:14px 16px;flex:1;min-width:0;display:flex;gap:14px;align-items:center;}
+.news-num{font-family:var(--font-en);font-size:24px;font-weight:800;flex-shrink:0;line-height:1;width:36px;text-align:center;}
 .news-content{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;}
-.news-tag-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
-.cat-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;color:#fff;border:none;letter-spacing:0.02em;}
-.cat-pc{background:#007AFF;}
-.cat-mobile{background:#AF52DE;}
-.cat-esport{background:#FF9500;}
-.cat-biz{background:#34C759;}
-.cat-event{background:#5AC8FA;}
-.cat-svc{background:#8E8E93;}
-.cat-hw{background:#FF3B30;}
-.hot-badge{font-size:10px;font-weight:900;color:#fff;background:#FF2D55;padding:3px 10px;border-radius:20px;letter-spacing:0.02em;}
+.news-tag-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.cat-pill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;letter-spacing:0.02em;border:none;}
+.cat-pc{background:rgba(0,122,255,0.12);color:#0066CC;}
+.cat-mobile{background:rgba(175,82,222,0.12);color:#8B32C8;}
+.cat-esport{background:rgba(255,149,0,0.12);color:#CC7700;}
+.cat-biz{background:rgba(52,199,89,0.12);color:#1D8A3E;}
+.cat-event{background:rgba(90,200,250,0.12);color:#0090C0;}
+.cat-svc{background:rgba(142,142,147,0.12);color:#636366;}
+.cat-hw{background:rgba(255,59,48,0.12);color:#CC2200;}
+.hot-badge{font-size:9px;font-weight:800;color:#FF2D55;background:rgba(255,45,85,0.10);padding:2px 8px;border-radius:4px;letter-spacing:0.03em;}
 .news-via{font-size:11px;color:var(--text-secondary);margin-left:auto;font-weight:400;}
-.news-title{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;letter-spacing:-0.02em;color:var(--text);}
-.news-summary{font-size:12px;color:var(--text-secondary);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-weight:400;}
-.news-thumb{flex:0 0 280px;overflow:hidden;}
+.news-title{font-size:15px;font-weight:700;line-height:1.45;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;letter-spacing:-0.02em;color:var(--text);}
+.news-summary{font-size:11px;color:var(--text-secondary);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:400;}
+.news-thumb{flex:0 0 200px;height:120px;overflow:hidden;}
 .news-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
-@media(max-width:600px){.news-thumb{flex:0 0 140px;}.news-body{padding:14px;gap:10px;}.news-num{font-size:22px;}.news-title{font-size:14px;}}
-/* Pagination */
-.news-pager{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;padding:10px 0;}
-.news-pager-info{font-family:var(--font-en);font-size:12px;color:var(--text-secondary);font-weight:500;margin-right:12px;}
-.news-dot{width:10px;height:10px;border-radius:50%;background:rgba(60,60,67,0.12);cursor:pointer;transition:all .2s;}
-.news-dot.active{background:#007AFF;width:24px;border-radius:5px;}
+@media(max-width:600px){.news-thumb{flex:0 0 120px;}.news-body{padding:10px 12px;gap:8px;}.news-num{font-size:20px;width:28px;}.news-title{font-size:13px;}}
 
 /* Dashboard */
 .dash{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-top:14px;}
@@ -179,9 +174,8 @@ footer p{font-size:11px;color:var(--text-secondary);font-weight:400;line-height:
     <span class="nav-date">2026.04.02 (목)</span>
     <div class="nav-links">
       <a href="#cover">커버</a>
-      <a href="#stockSection">주식</a>
       <a href="#editorPick">에디터픽</a>
-      <a href="#newsGrid">뉴스</a>
+      <a href="#newsSection">뉴스</a>
       <a href="#dashboard">대시보드</a>
     </div>
   </div>
@@ -200,15 +194,7 @@ footer p{font-size:11px;color:var(--text-secondary);font-weight:400;line-height:
     <span class="weather-pill">🌡 9°C / 17°C</span>
     <span class="weather-pill">😷 미세먼지 나쁨 (108)</span>
   </div>
-  <div class="stk-grid">
-    <div class="stk up"><span class="stk-n">크래프톤</span><span class="stk-p">262,000</span><span class="stk-c">▲ +2.75%</span></div>
-<div class="stk up"><span class="stk-n">엔씨</span><span class="stk-p">229,500</span><span class="stk-c">▲ +2.46%</span></div>
-<div class="stk up"><span class="stk-n">넷마블</span><span class="stk-p">51,400</span><span class="stk-c">▲ +4.47%</span></div>
-<div class="stk up"><span class="stk-n">시프트업</span><span class="stk-p">32,050</span><span class="stk-c">▲ +1.26%</span></div>
-<div class="stk up"><span class="stk-n">NHN</span><span class="stk-p">38,750</span><span class="stk-c">▲ +3.06%</span></div>
-<div class="stk up"><span class="stk-n">더블유게임즈</span><span class="stk-p">50,800</span><span class="stk-c">▲ +2.21%</span></div>
 
-  </div>
   <div class="stats-row">
     <div class="stat"><div class="stat-val">30</div><div class="stat-lbl">Articles</div></div>
     <div class="stat"><div class="stat-val">3</div><div class="stat-lbl">Sources</div></div>
@@ -287,13 +273,12 @@ footer p{font-size:11px;color:var(--text-secondary);font-weight:400;line-height:
 </section>
 
 <!-- ALL NEWS -->
-<section>
+<section id="newsSection">
   <div class="sec-hdr">
     <h2>📰 All News</h2>
     <span class="sec-pill">30건</span>
   </div>
   <div class="news-list" id="newsList"></div>
-  <div class="news-pager" id="newsPager"></div>
 </section>
 
 <!-- DASHBOARD -->
@@ -434,71 +419,30 @@ const CAT_STYLE = {
   "하드웨어":{cls:"cat-hw",bar:"linear-gradient(180deg,rgba(200,90,0,0.48),rgba(200,90,0,0.08))",numColor:"rgba(180,80,0,0.75)"},
 };
 
-// Render News — single column list with pagination
+// Render News — all 30 in single column
 (function(){
   const list = document.getElementById('newsList');
-  const pager = document.getElementById('newsPager');
-  const PER_PAGE = 5;
-  const totalPages = Math.ceil(NEWS.length / PER_PAGE);
-
-  // Create pages
-  for(let p=0; p<totalPages; p++){
-    const page = document.createElement('div');
-    page.className = 'news-page' + (p===0?' active':'');
-    page.id = 'newsPage'+p;
-
-    const start = p * PER_PAGE;
-    const end = Math.min(start + PER_PAGE, NEWS.length);
-
-    for(let i=start; i<end; i++){
-      const n = NEWS[i];
-      const s = CAT_STYLE[n.cat] || CAT_STYLE["서비스"];
-      const imgSrc = IMGS[i] || "";
-      page.innerHTML += `
-        <a class="news-card" href="${n.url}" target="_blank">
-          <div class="news-bar" style="background:${s.bar}"></div>
-          <div class="news-body">
-            <div class="news-num" style="color:${s.numColor}">${String(n.num).padStart(2,'0')}</div>
-            <div class="news-content">
-              <div class="news-tag-row">
-                <span class="cat-pill ${s.cls}">${n.cat}</span>
-                ${n.hot ? '<span class="hot-badge">HOT</span>' : ''}
-                <span class="news-via">via ${n.source}</span>
-              </div>
-              <p class="news-title">${n.title}</p>
-              <p class="news-summary">${n.summary}</p>
+  NEWS.forEach((n,i) => {
+    const s = CAT_STYLE[n.cat] || CAT_STYLE["서비스"];
+    const imgSrc = IMGS[i] || "";
+    list.innerHTML += `
+      <a class="news-card" href="${n.url}" target="_blank">
+        <div class="news-bar" style="background:${s.bar}"></div>
+        <div class="news-body">
+          <div class="news-num" style="color:${s.numColor}">${String(n.num).padStart(2,'0')}</div>
+          <div class="news-content">
+            <div class="news-tag-row">
+              <span class="cat-pill ${s.cls}">${n.cat}</span>
+              ${n.hot ? '<span class="hot-badge">HOT</span>' : ''}
+              <span class="news-via">via ${n.source}</span>
             </div>
+            <p class="news-title">${n.title}</p>
+            <p class="news-summary">${n.summary}</p>
           </div>
-          ${imgSrc ? `<div class="news-thumb"><img src="${imgSrc}" alt=""></div>` : ''}
-        </a>`;
-    }
-    list.appendChild(page);
-  }
-
-  // Pager
-  const info = document.createElement('span');
-  info.className = 'news-pager-info';
-  info.id = 'newsPageInfo';
-  pager.appendChild(info);
-
-  for(let p=0; p<totalPages; p++){
-    const dot = document.createElement('div');
-    dot.className = 'news-dot' + (p===0?' active':'');
-    dot.addEventListener('click', () => goToPage(p));
-    pager.appendChild(dot);
-  }
-
-  function goToPage(idx){
-    document.querySelectorAll('.news-page').forEach((el,i) => {
-      el.classList.toggle('active', i===idx);
-    });
-    document.querySelectorAll('.news-dot').forEach((el,i) => {
-      el.classList.toggle('active', i===idx);
-    });
-    const s = idx*PER_PAGE+1, e = Math.min((idx+1)*PER_PAGE, NEWS.length);
-    document.getElementById('newsPageInfo').textContent = `#${String(s).padStart(2,'0')} – #${String(e).padStart(2,'0')}  of ${NEWS.length}`;
-  }
-  goToPage(0);
+        </div>
+        ${imgSrc ? `<div class="news-thumb"><img src="${imgSrc}" alt=""></div>` : ''}
+      </a>`;
+  });
 })();
 
 // Render Stocks
@@ -590,6 +534,61 @@ const CAT_STYLE = {
     legend.innerHTML += `<div class="cat-legend-item"><div class="cat-legend-dot" style="background:${catColors[cat]||'#8E8E93'};"></div>${cat} ${Math.round(pct)}%</div>`;
     cumulative += pct;
   });
+})();
+// Nav scroll-spy with sliding indicator
+(function(){
+  const links = document.querySelectorAll('.nav-links a');
+  const navLinksContainer = document.querySelector('.nav-links');
+  const indicator = document.createElement('div');
+  indicator.className = 'nav-indicator';
+  navLinksContainer.appendChild(indicator);
+
+  const sections = [];
+  links.forEach(link => {
+    const id = link.getAttribute('href').replace('#','');
+    const el = document.getElementById(id);
+    if(el) sections.push({el, link});
+  });
+
+  function updateIndicator(activeLink){
+    const rect = activeLink.getBoundingClientRect();
+    const parentRect = navLinksContainer.getBoundingClientRect();
+    indicator.style.left = (rect.left - parentRect.left) + 'px';
+    indicator.style.width = rect.width + 'px';
+  }
+
+  function onScroll(){
+    const scrollY = window.scrollY + 100;
+    let current = sections[0];
+    sections.forEach(s => {
+      if(s.el.offsetTop <= scrollY) current = s;
+    });
+    links.forEach(l => l.classList.remove('active'));
+    current.link.classList.add('active');
+    updateIndicator(current.link);
+  }
+
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', () => {
+    const active = document.querySelector('.nav-links a.active');
+    if(active) updateIndicator(active);
+  });
+
+  // Smooth scroll on click
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = link.getAttribute('href').replace('#','');
+      const el = document.getElementById(id);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  // Init
+  if(sections.length) {
+    sections[0].link.classList.add('active');
+    requestAnimationFrame(() => updateIndicator(sections[0].link));
+  }
 })();
 </script>
 </body>
