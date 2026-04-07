@@ -1893,52 +1893,14 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 // ===== ENHANCEMENT v2: NEW DATA + RENDERING =====
 
 // --- New Data ---
-const GLOBAL_NEWS = [
-  {title:"디아블로 4 확장팩 '분노의 군주' 공식 발표",source:"IGN",summary:"블리자드가 디아블로 4 확장팩 '분노의 군주'를 4월 28일 출시 예정으로 발표하며, IGN 독점 컷신 영상을 공개했다.",url:"https://www.dlcompare.com/gaming-news/diablo-iv-lord-of-hatred-headlines-ign-first-with-an-exclusive-cutscene-74299",category:"PC/콘솔",thumb:"https://images.dlcompare.com/is/image/sharegames/diablo-4-lord-of-hatred-artwork"},
-  {title:"하데스 2, 4월 14일 콘솔 출시 확정",source:"PC Gamer",summary:"슈퍼자이언트 게임즈의 하데스 2가 4월 14일 PS5·Xbox Series X|S로 출시되며, 엑스박스 게임패스에도 동시 포함된다.",url:"https://www.pcgamer.com/games/pc-game-release-dates-april-2026/",category:"PC/콘솔",thumb:"https://cdn.akamai.steamstatic.com/steam/apps/1145350/header.jpg"},
-  {title:"파이널 판타지 14 팬 페스티벌, 차기 확장팩 공개",source:"PC Gamer",summary:"FF14 4월 팬 페스티벌에서 차기 확장팩 공식 트레일러와 신규 직업, 존 정보가 최초 공개된다.",url:"https://www.pcgamer.com/games/mmo/final-fantasy-14-fan-festival-2026/",category:"PC/콘솔",thumb:"https://img.finalfantasyxiv.com/lds/h/0/U4xWpMELHE_UfwuuLuTfV2K4Rg.jpg"},
-  {title:"카프콤 '프라그마타' 4월 17일 출시",source:"PC Gamer",summary:"카프콤의 SF 액션 신작 프라그마타가 PS5, Xbox Series, PC로 4월 17일 동시 출시된다.",url:"https://www.pcgamer.com/games/action/pragmata-release-date-april-2026/",category:"PC/콘솔",thumb:"https://cdn.akamai.steamstatic.com/steam/apps/1276510/header.jpg"},
-  {title:"스타필드, 플레이스테이션 5로 출시",source:"GameSpot",summary:"마이크로소프트의 우주 RPG 스타필드가 PS5로 출시되며, 듀얼센스 진동·터치패드·라이트바 등을 완전 지원한다.",url:"https://www.gamespot.com/gallery/the-biggest-new-game-releases-of-april-2026/2900-7623/",category:"PC/콘솔",thumb:"https://cdn.akamai.steamstatic.com/steam/apps/1716740/header.jpg"},
-  {title:"PS Plus 4월 무료 게임 공개",source:"GameSpot",summary:"PS Plus 멤버들이 4월 7일부터 Lords of the Fallen, 톰 레이더 I-III 리마스터 등을 무료로 받을 수 있다.",url:"https://www.gamespot.com/articles/playstation-plus-essential-free-games-for-april-2026/1100-6539062/",category:"업계",thumb:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/PlayStation_logo.svg/1200px-PlayStation_logo.svg.png"},
-  {title:"GTA 6 출시일 11월 19일 확정",source:"Rockstar",summary:"록스타 게임즈가 그랜드 셰프트 오토 6의 출시일을 11월 19일로 확정, PS5·Xbox Series 동시 출시한다.",url:"https://www.rockstargames.com/newswire/article/ak3ak31a49a221/grand-theft-auto-vi-is-now-set-to-launch-november-19-2026",category:"PC/콘솔",thumb:"https://media-rockstargames-com.akamaized.net/mfe6/prod/__common/img/71d4d17edcd49703a5ea446cc0e588e6.jpg"},
-  {title:"유로게이머, 2026년 기대작 93선 발표",source:"Eurogamer",summary:"유로게이머가 2026년 가장 기대되는 게임 93개의 목록을 발표하며, 올해 주요 출시 일정을 정리했다.",url:"https://x.com/eurogamer/status/2011045562699956490",category:"업계",thumb:"https://assetsio.gnwcdn.com/eurogamer-logo-og.jpg"},
-  {title:"CES 2026: 8BitDo 모듈식 무선 컨트롤러 공개",source:"The Verge",summary:"CES 2026에서 8BitDo의 Ultimate 3E 모듈식 무선 컨트롤러가 공개, $149에 2분기 출시 예정이다.",url:"https://app.daily.dev/posts/the-verge-awards-at-ces-2026-ibpwz4dfi",category:"하드웨어",thumb:"https://cdn.shopify.com/s/files/1/0550/0524/0498/files/8BitDo-Ultimate-3E.jpg"},
-  {title:"코타쿠 선정, 2026년 상반기 최고 신작 13선",source:"Kotaku",summary:"코타쿠가 2026년 현재까지 출시된 최고의 신작 게임 13개를 선정하여 소개했다.",url:"https://kotaku.com/best-new-video-games-2026-2000680583",category:"업계",thumb:"https://i.kinja-img.com/image/upload/c_fill,h_675,pg_1,q_80,w_1200/kotaku-og.jpg"}
-];
+
 
 // YT_TRENDING removed
 
-const PATCHES = [
-  {game:"리그 오브 레전드",version:"26.7",date:"4/1",icon:"⚔️",color:"#C89B3C",highlights:["프라이드 치킨 킹 스웨인 스킨 출시","버블 배시 블리츠크랭크 스킨 출시","퍼그 트레이너 세주아니 스킨 출시"],url:"https://www.leagueoflegends.com/en-us/news/game-updates/league-of-legends-patch-26-7-notes/"},
-  {game:"발로란트",version:"12.04",date:"3/18",icon:"🔫",color:"#FF4655",highlights:["에이전트 밸런스 조정","맵 개선 사항","버그 수정 및 게임 시스템 개선"],url:"https://playvalorant.com/en-us/news/game-updates/valorant-patch-notes-12-04/"},
-  {game:"오버워치2",version:"특별 이벤트",date:"4/1",icon:"🛡️",color:"#F99E1A",highlights:["언더워치 아케이드 모드 출시","특별 도전과제 및 보상 제공","4/13까지 제한 기간 운영"],url:"https://overwatch.blizzard.com/ko-kr/news/patch-notes/"},
-  {game:"메이플스토리",version:"4월 업데이트",date:"4/1",icon:"🍁",color:"#FF8C00",highlights:["길 잃은 오뚝이 일꾼 이벤트 (4/1~4/5)","메이플 로얄 스타일 154기 업데이트","유피테르 보스 컬렉션 판매"],url:"https://maplestory.nexon.com/news/update"},
-  {game:"로스트아크",version:"4월 업데이트",date:"4/1",icon:"⚡",color:"#15A2F0",highlights:["모코코 생일 이벤트 (케이크 만들기)","스프링 데일리 리워드 판매","UI 및 퀘스트 버그 수정"],url:"https://lostark.game.onstove.com/News/Notice/Views/13405"}
-];
+
 
 // Sparkline data (7-day closing prices, approximate)
-const SPARKLINE_DATA = {
-  "크래프톤":[258000,260000,262500,259000,261500,263000,263500],
-  "엔씨(NC)":[195000,198000,196500,200000,199000,201000,202500],
-  "넷마블":[55200,56000,55800,57000,58500,59200,60100],
-  "시프트업":[30200,31000,31500,32300,32800,33400,34000],
-  "NHN":[23000,23200,23100,23500,23400,23600,23800],
-  "더블유게임즈":[46000,46500,47000,46800,47200,47500,47800],
-  "펄어비스":[55000,58000,62000,66200,70800,74300,77400],
-  "카카오게임즈":[11800,11900,12100,12050,12200,12300,12350],
-  "넥슨게임즈":[18000,18200,18100,18500,18400,18600,18800],
-  "위메이드":[25000,25500,25200,25800,26000,26500,26200],
-  "컴투스":[31000,31500,31200,31800,32000,32500,32300],
-  "컴투스홀딩스":[18000,18200,18100,18400,18300,18500,18600],
-  "네오위즈":[16000,16200,16100,16300,16500,16400,16600],
-  "데브시스터즈":[42000,42500,43000,42800,43500,44000,43800],
-  "웹젠":[17000,17200,17100,17400,17300,17500,17600],
-  "미투온":[6000,6100,6050,6200,6150,6300,6250],
-  "조이시티":[14000,14200,14100,14300,14500,14400,14600],
-  "액토즈소프트":[8000,8100,8050,8200,8150,8300,8250],
-  "선데이토즈":[4000,4100,4050,4200,4150,4300,4250],
-  "플레이위드":[5000,5100,5050,5200,5150,5300,5250]
-};
+
 
 // Hero Slider removed
 
