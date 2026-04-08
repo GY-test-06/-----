@@ -654,12 +654,30 @@ body{--scroll-y:0;}
 /* --- News Card Expandable Preview --- */
 
 /* --- Stock Treemap Heatmap --- */
-.treemap-container{position:relative;width:100%;height:480px;border-radius:16px;overflow:hidden;background:var(--card);border:0.5px solid var(--border);box-shadow:var(--shadow);margin:14px 0;}
+.treemap-container{position:relative;width:100%;height:480px;border-radius:16px;overflow:visible;background:var(--card);border:0.5px solid var(--border);box-shadow:var(--shadow);margin:14px 0;}
+@media(max-width:640px){.treemap-container{overflow:hidden;}}
 .treemap-cell{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0.5px solid rgba(255,255,255,0.15);cursor:pointer;transition:filter 0.2s,transform 0.15s;padding:4px;overflow:hidden;box-sizing:border-box;}
 .treemap-cell:hover{filter:brightness(1.15);z-index:2;transform:scale(1.02);}
 .treemap-name{font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;line-height:1.2;}
 .treemap-change{font-family:var(--font-en);font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.4);white-space:nowrap;line-height:1.2;}
 .treemap-price{font-family:var(--font-en);color:rgba(255,255,255,0.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;line-height:1.2;}
+/* 탭 툴팁 (모바일 탭 시 표시) */
+.treemap-tap-tip{position:absolute;background:rgba(24,24,26,0.96);border:0.5px solid rgba(255,255,255,0.22);border-radius:12px;padding:10px 14px;z-index:200;pointer-events:none;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);min-width:120px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+.treemap-tap-tip .tt-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;}
+.treemap-tap-tip .tt-chg{font-size:15px;font-weight:800;}
+.treemap-tap-tip .tt-price{font-size:11px;color:rgba(255,255,255,0.65);margin-top:2px;}
+.treemap-tap-tip::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:10px;height:10px;background:rgba(24,24,26,0.96);border-right:0.5px solid rgba(255,255,255,0.22);border-bottom:0.5px solid rgba(255,255,255,0.22);clip-path:polygon(0 0,100% 0,50% 100%);}
+/* 모바일 전체 종목 리스트 (히트맵 보조) */
+.treemap-mobile-list{display:none;}
+@media(max-width:640px){
+  .treemap-mobile-list{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:10px;}
+  .tml-item{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:10px;background:var(--card);border:0.5px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+  .tml-name{font-size:12px;font-weight:600;color:var(--text);}
+  .tml-chg{font-size:12px;font-weight:800;font-family:var(--font-en);}
+  .tml-up{color:#FF3B30;}
+  .tml-down{color:#007AFF;}
+  .tml-flat{color:#8E8E93;}
+}
 
 /* --- Global News Section --- */
 .global-news-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
@@ -757,6 +775,8 @@ body{--scroll-y:0;}
     <span class="sec-pill">시가총액 비례 크기 · 등락률 색상</span>
   </div>
   <div class="treemap-container" id="treemapChart"></div>
+  <!-- 모바일 전체 종목 리스트 (히트맵 보조 — 모바일에서만 표시) -->
+  <div class="treemap-mobile-list" id="treemapMobileList"></div>
 
 </section>
 
@@ -2007,92 +2027,131 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   const container = document.getElementById('treemapChart');
   if(!container || !STOCKS.length) return;
 
-  // Approximate market caps for relative sizing
   const MCAPS = {
-    "크래프톤":20,"엔씨(NC)":6,"넷마블":5,"시프트업":4,"NHN":3.5,"더블유게임즈":3,
+    "크래프톤":20,"엔씨소프트":6,"엔씨(NC)":6,"넷마블":5,"시프트업":4,"NHN":3.5,"더블유게임즈":3,
     "펄어비스":3.5,"카카오게임즈":2.5,"넥슨게임즈":2,"위메이드":2,"컴투스":2,"컴투스홀딩스":1.5,
     "네오위즈":1.2,"데브시스터즈":1.8,"웹젠":1.2,"미투온":0.8,"조이시티":0.8,"액토즈소프트":0.6,
     "선데이토즈":0.5,"플레이위드":0.4
   };
 
-  // Simple squarified treemap layout
-  const totalMcap = Object.values(MCAPS).reduce((a,b) => a+b, 0);
-  const cw = container.offsetWidth || 860;
-  const ch = 480;
+  const isMobile = window.innerWidth < 640;
+  const cw = container.offsetWidth || (isMobile ? 360 : 860);
+  // 모바일: 너비에 비례해서 높이 결정 (가로:세로 ≈ 1:0.75), 데스크탑 480 고정
+  const ch = isMobile ? Math.max(280, Math.round(cw * 0.75)) : 480;
+  container.style.height = ch + 'px';
 
-  // Sort stocks by market cap descending
-  const sorted = [...STOCKS].sort((a,b) => (MCAPS[b.name]||0) - (MCAPS[a.name]||0));
+  const sorted = [...STOCKS].sort((a,b) => (MCAPS[b.name]||0.5) - (MCAPS[a.name]||0.5));
 
-  // Simple slice-and-dice layout
   function layout(items, x, y, w, h, horizontal){
     if(items.length === 0) return [];
-    if(items.length === 1){
-      return [{stock:items[0], x, y, w, h}];
-    }
+    if(items.length === 1) return [{stock:items[0], x, y, w, h}];
     const totalVal = items.reduce((s,i) => s + (MCAPS[i.name]||0.5), 0);
     const mid = Math.floor(items.length / 2);
     const left = items.slice(0, mid);
     const right = items.slice(mid);
-    const leftVal = left.reduce((s,i) => s + (MCAPS[i.name]||0.5), 0);
-    const ratio = leftVal / totalVal;
-
+    const ratio = left.reduce((s,i) => s + (MCAPS[i.name]||0.5), 0) / totalVal;
     if(horizontal){
-      return [
-        ...layout(left, x, y, w * ratio, h, !horizontal),
-        ...layout(right, x + w * ratio, y, w * (1-ratio), h, !horizontal)
-      ];
+      return [...layout(left, x, y, w*ratio, h, !horizontal), ...layout(right, x+w*ratio, y, w*(1-ratio), h, !horizontal)];
     } else {
-      return [
-        ...layout(left, x, y, w, h * ratio, !horizontal),
-        ...layout(right, x, y + h * ratio, w, h * (1-ratio), !horizontal)
-      ];
+      return [...layout(left, x, y, w, h*ratio, !horizontal), ...layout(right, x, y+h*ratio, w, h*(1-ratio), !horizontal)];
     }
   }
 
   const cells = layout(sorted, 0, 0, cw, ch, true);
 
+  // 탭 툴팁 표시 함수
+  let activeTip = null;
+  function showTip(cell, s, isUp, chg, bg){
+    if(activeTip){ activeTip.remove(); activeTip = null; }
+    const tip = document.createElement('div');
+    tip.className = 'treemap-tap-tip';
+    const chgColor = isUp ? '#FF6B6B' : s.up===false ? '#64B5F6' : '#ccc';
+    const sign = isUp ? '+' : '';
+    tip.innerHTML = '<div class="tt-name">'+s.name+'</div>'
+      +'<div class="tt-chg" style="color:'+chgColor+'">'+sign+s.change+'</div>'
+      +'<div class="tt-price">'+s.price+'원</div>';
+    // 위치: 셀 상단 중앙
+    const cellRect = cell.getBoundingClientRect();
+    const contRect = container.getBoundingClientRect();
+    let tipLeft = (parseFloat(cell.style.left) + parseFloat(cell.style.width)/2);
+    let tipTop = parseFloat(cell.style.top) - 76;
+    if(tipTop < 4) tipTop = parseFloat(cell.style.top) + parseFloat(cell.style.height) + 6;
+    tip.style.left = Math.max(4, Math.min(cw - 134, tipLeft - 60)) + 'px';
+    tip.style.top = tipTop + 'px';
+    container.appendChild(tip);
+    activeTip = tip;
+    // 300ms 후 자동 제거 (다른 셀 탭하면 즉시 교체)
+    setTimeout(()=>{ if(activeTip===tip){ tip.remove(); activeTip=null; }}, 2800);
+  }
+  document.addEventListener('click', function(e){
+    if(activeTip && !activeTip.contains(e.target) && !e.target.classList.contains('treemap-cell')){ activeTip.remove(); activeTip=null; }
+  });
+
   cells.forEach(c => {
     const s = c.stock;
     const chg = parseFloat(s.change);
     const isUp = s.up === true;
-    const isFlatOrNull = s.up === null || s.up === undefined;
-
-    // Eastern convention: up=red, down=blue
-    let bg;
+    const isFlat = s.up === null || s.up === undefined;
     const absChg = Math.abs(chg) || 0;
-    if(isFlatOrNull) bg = 'rgba(142,142,147,0.7)';
+
+    let bg;
+    if(isFlat) bg = 'rgba(142,142,147,0.7)';
     else if(isUp){
-      const intensity = Math.min(1, absChg / 10);
-      bg = 'rgba('+(200+Math.round(intensity*55))+','+(30+Math.round(intensity*15))+','+(30+Math.round(intensity*18))+',0.85)';
+      const t = Math.min(1, absChg / 10);
+      bg = 'rgba('+(200+Math.round(t*55))+','+(30+Math.round(t*15))+','+(30+Math.round(t*18))+',0.85)';
     } else {
-      const intensity = Math.min(1, absChg / 10);
-      bg = 'rgba('+(0+Math.round(intensity*20))+','+(80+Math.round(intensity*60))+','+(180+Math.round(intensity*75))+',0.85)';
+      const t = Math.min(1, absChg / 10);
+      bg = 'rgba('+(Math.round(t*20))+','+(80+Math.round(t*60))+','+(180+Math.round(t*75))+',0.85)';
     }
 
     const cell = document.createElement('div');
     cell.className = 'treemap-cell';
 
-    // Dynamic font sizing based on cell dimensions
+    // 모바일은 임계값 낮춤 (더 작은 셀도 텍스트 표시)
+    const mFactor = isMobile ? 0.7 : 1;
     const minDim = Math.min(c.w, c.h);
-    const nameSize = minDim < 40 ? 8 : minDim < 60 ? 10 : 12;
-    const chgSize = minDim < 40 ? 9 : minDim < 60 ? 11 : 14;
-    const priceSize = minDim < 40 ? 7 : 9;
+    const showName = c.w > 28*mFactor && c.h > 22*mFactor;
+    const showChange = c.h > 32*mFactor;
+    const showPrice = c.w > 60*mFactor && c.h > 52*mFactor;
+    const nameSize = minDim < 35 ? 8 : minDim < 55 ? 10 : 12;
+    const chgSize  = minDim < 35 ? 8 : minDim < 55 ? 11 : 14;
+    const priceSize = 8;
+    // 칸이 좁으면 이름 축약 (한글 2~3자)
+    const maxChars = Math.max(2, Math.floor(c.w / (isMobile ? 11 : 13)));
+    const nameText = s.name.length > maxChars ? s.name.substring(0, maxChars) : s.name;
 
-    cell.style.cssText = 'left:'+c.x+'px;top:'+c.y+'px;width:'+c.w+'px;height:'+c.h+'px;background:'+bg+';border-radius:'+(c.w>60&&c.h>50?'6':'2')+'px;';
+    cell.style.cssText = 'left:'+c.x.toFixed(1)+'px;top:'+c.y.toFixed(1)+'px;width:'+c.w.toFixed(1)+'px;height:'+c.h.toFixed(1)+'px;background:'+bg+';border-radius:'+(c.w>50&&c.h>40?'6':'2')+'px;';
 
-    // Show different levels of detail based on cell size
-    const showName = c.w > 35 && c.h > 30;
-    const showChange = c.h > 40;
-    const showPrice = c.w > 70 && c.h > 60;
-    const nameText = c.w > 60 ? s.name : s.name.substring(0, Math.max(2, Math.floor(c.w/14)));
-
-    cell.innerHTML = (showName ? '<span class="treemap-name" style="font-size:'+nameSize+'px">'+nameText+'</span>' : '') +
+    cell.innerHTML =
+      (showName ? '<span class="treemap-name" style="font-size:'+nameSize+'px">'+nameText+'</span>' : '') +
       (showChange ? '<span class="treemap-change" style="font-size:'+chgSize+'px">'+(isUp?'+':'')+s.change+'</span>' : '') +
       (showPrice ? '<span class="treemap-price" style="font-size:'+priceSize+'px">'+s.price+'원</span>' : '');
 
     cell.title = s.name + ' ' + s.price + '원 (' + (isUp?'+':'') + s.change + ')';
+
+    // 모바일: 탭 툴팁 / 데스크탑: hover title로 충분
+    cell.addEventListener('click', function(e){
+      e.stopPropagation();
+      showTip(cell, s, isUp, chg, bg);
+    });
+
     container.appendChild(cell);
   });
+
+  // 모바일 전체 종목 리스트 생성
+  const mList = document.getElementById('treemapMobileList');
+  if(mList){
+    sorted.forEach(s => {
+      const isUp = s.up === true;
+      const isFlat = s.up === null || s.up === undefined;
+      const cls = isFlat ? 'tml-flat' : isUp ? 'tml-up' : 'tml-down';
+      const sign = isUp ? '+' : '';
+      const item = document.createElement('div');
+      item.className = 'tml-item';
+      item.innerHTML = '<span class="tml-name">'+s.name+'</span><span class="tml-chg '+cls+'">'+sign+s.change+'</span>';
+      mList.appendChild(item);
+    });
+  }
 })();
 
 // --- Global News Rendering ---
